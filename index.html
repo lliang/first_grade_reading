@@ -2,7 +2,11 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <!-- 增加X5浏览器适配 -->
+    <meta name="x5-page-mode" content="app">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!-- 优化视口设置 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>一年级诵读内容</title>
     <style>
         :root {
@@ -1043,7 +1047,8 @@
                 }
             });
         }
-
+        // 微信浏览器特性检测
+        const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
         function showContent(sectionId) {
             const content = document.getElementById('content');
             const section = recitationData.find(item => item.id === sectionId);
@@ -1055,8 +1060,12 @@
 
                 if (sectionId === 'toc') {
                     content.innerHTML = `<div class="section">${section.content}</div>`;
-        // 改用事件委托方式绑定点击事件
-        content.addEventListener('click', tocClickHandler);
+                // 微信专用事件处理
+                if(isWeChat){
+                    handleWeChatToc();
+                }else{
+                    content.addEventListener('click', tocClickHandler);
+                }
                 } else {
                     content.innerHTML = `
                         <div class="section">
@@ -1083,7 +1092,60 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
+        // 微信专用目录处理
+        function handleWeChatToc() {
+            // 添加点击态样式
+            const style = document.createElement('style');
+            style.textContent = `
+                .toc-item:active {
+                    background: ${getComputedStyle(document.documentElement)
+                        .getPropertyValue('--primary-color')} !important;
+                }
+            `;
+            document.head.appendChild(style);
 
+            // 使用touch事件代替click
+            let touchStartTime;
+            content.addEventListener('touchstart', e => {
+                touchStartTime = Date.now();
+                const tocItem = e.target.closest('.toc-item');
+                if (tocItem) {
+                    tocItem.classList.add('active');
+                    e.preventDefault(); // 阻止默认滚动行为
+                }
+            });
+
+            content.addEventListener('touchend', e => {
+                const tocItem = e.target.closest('.toc-item');
+                if (tocItem) {
+                    tocItem.classList.remove('active');
+                    if (Date.now() - touchStartTime < 300) {
+                        handleTocClick(tocItem);
+                    }
+                }
+            });
+        }
+                // 统一处理目录点击
+        function handleTocClick(tocItem) {
+            const targetSection = tocItem.dataset.section;
+            
+            // 微信浏览器需要强制重排
+            void tocItem.offsetHeight;
+            
+            // 添加过渡动画
+            tocItem.style.transition = 'transform 0.2s';
+            tocItem.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                tocItem.style.transform = '';
+                showContent(targetSection);
+                
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.sidebar').classList.remove('open');
+                    document.querySelector('.overlay').classList.remove('active');
+                }
+            }, 200);
+        }
 // 新增事件委托处理函数
 function tocClickHandler(e) {
     const tocItem = e.target.closest('.toc-item');
@@ -1163,5 +1225,28 @@ function tocClickHandler(e) {
 
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
+            // 修改CSS增加微信兼容
+        <style>
+            /* 增加触摸反馈 */
+            .toc-item {
+                -webkit-tap-highlight-color: rgba(0,0,0,0);
+                -webkit-touch-callout: none;
+            }
+
+            /* 兼容X5内核的flex布局 */
+            @media (-webkit-tvos-version:none) {
+                .toc-list {
+                    display: -webkit-flex;
+                    display: flex;
+                    -webkit-flex-wrap: wrap;
+                    flex-wrap: wrap;
+                }
+            }
+
+            /* 修复X5内核的滚动问题 */
+            .sidebar {
+                -webkit-overflow-scrolling: touch;
+            }
+        </style>
 </body>
 </html>
