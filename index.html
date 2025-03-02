@@ -1055,11 +1055,8 @@
 
                 if (sectionId === 'toc') {
                     content.innerHTML = `<div class="section">${section.content}</div>`;
-                    setTimeout(() => {
-                        document.querySelectorAll('.toc-item').forEach(item => {
-                            item.addEventListener('click', () => showContent(item.dataset.section));
-                        });
-                    }, 0);
+        // 改用事件委托方式绑定点击事件
+        content.addEventListener('click', tocClickHandler);
                 } else {
                     content.innerHTML = `
                         <div class="section">
@@ -1087,6 +1084,28 @@
             }
         }
 
+// 新增事件委托处理函数
+function tocClickHandler(e) {
+    const tocItem = e.target.closest('.toc-item');
+    if (tocItem) {
+        const targetSection = tocItem.dataset.section;
+        
+        // 移动端关闭侧边栏
+        if (window.innerWidth <= 768) {
+            document.querySelector('.sidebar').classList.remove('open');
+            document.querySelector('.overlay').classList.remove('active');
+        }
+        
+        // 添加滑动效果
+        document.documentElement.style.scrollBehavior = 'smooth';
+        showContent(targetSection);
+        document.documentElement.style.scrollBehavior = '';
+        
+        // 移除事件监听防止重复绑定
+        content.removeEventListener('click', tocClickHandler);
+    }
+}
+
         function initApp() {
             generateTOC();
             generateNavList();
@@ -1101,6 +1120,27 @@
                         document.querySelector('.overlay').classList.remove('active');
                     }
                 }
+
+    // 统一侧边栏关闭逻辑
+    function closeSidebar() {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        }
+    }
+    
+    // 点击遮罩层时停止朗读
+    overlay.addEventListener('click', () => {
+        closeSidebar();
+        speech.stop();
+    });
+    
+    // 窗口大小变化时自动关闭侧边栏
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && sidebar.classList.contains('open')) {
+            closeSidebar();
+        }
+    });
             });
 
             const toggleMenu = document.querySelector('.toggle-menu');
