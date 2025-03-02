@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一年级诵读内容</title>
+    <style>
+        :root {
+            --primary-color: #5D5CDE;
+            --text-color: #333;
+            --bg-color: #FFFFFF;
+            --sidebar-bg: #f5f5f5;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --highlight-bg: #f0f0fc;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f0f0f0;
+                --bg-color: #181818;
+                --sidebar-bg: #222222;
+                --card-bg: #2a2a2a;
+                --border-color: #444;
+                --shadow-color: rgba(0, 0, 0, 0.3);
+                --highlight-bg: #333355;
+            }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            transition: background-color 0.3s;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 220px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+            transition: transform 0.3s, background-color 0.3s;
+            z-index: 10;
+        }
+        
+        .sidebar-header {
+            padding: 20px 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .nav-list {
+            list-style: none;
+            padding: 10px 0;
+        }
+        
+        .nav-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-item:hover {
+            background-color: var(--highlight-bg);
+        }
+        
+        .nav-item.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 4px;
+            margin: 0 5px;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 20px;
+            margin-left: 220px;
+            transition: margin-left 0.3s;
+        }
+        
+        .section {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            transition: background-color 0.3s;
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-content {
+            white-space: pre-line;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: justify;
+            hyphens: auto;
+        }
+        
+        .toggle-menu {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 20;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 80%;
+                max-width: 320px;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .content {
+                margin-left: 0;
+                padding-top: 70px;
+            }
+            
+            .toggle-menu {
+                display: block;
+            }
+            
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 5;
+            }
+            
+            .overlay.active {
+                display: block;
+            }
+        }
+        
+        .toc {
+            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            margin-bottom: 20px;
+        }
+        
+        .toc-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .toc-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+        }
+        
+        .toc-item {
+            padding: 8px 12px;
+            background-color: var(--highlight-bg);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            text-align: center;
+        }
+        
+        .toc-item:hover {
+            transform: translateY(-2px);
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* 新增语音控制样式 */
+        .speech-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .play-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+            font-size: 14px;
+        }
+
+        .play-button:hover {
+            opacity: 0.9;
+        }
+
+        .play-button[data-state="playing"] {
+            background: #4CAF50;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            animation: pulse 1.5s infinite;
+            display: none;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(0.95); }
+        }
+
+        .status-indicator.active {
+            background: #4CAF50;
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .play-button {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="toggle-menu">☰</button>
+    <div class="overlay"></div>
+    
+    <div class="container">
+        <aside class="sidebar">
+            <div class="sidebar-header">一年级诵读内容</div>
+            <ul class="nav-list" id="nav-list">
+                <li class="nav-item active" data-section="toc">目录</li>
+                <!-- 导航项将通过 JavaScript 添加 -->
+            </ul>
+        </aside>
+        
+        <main class="content" id="content">
+            <!-- 内容将通过 JavaScript 添加 -->
+        </main>
+    </div>
+
+    <script>
+        class SpeechController {
+            constructor() {
+                this.synth = window.speechSynthesis;
+                this.utterance = null;
+                this.currentSection = null;
+                this.isPaused = false;
+                this.voices = [];
+                this.selectedVoice = null;
+
+                this.initVoices();
+            }
+
+            initVoices() {
+                const populateVoices = () => {
+                    this.voices = this.synth.getVoices();
+                    this.selectedVoice = this.voices.find(v => v.lang === 'zh-CN') || 
+                                      this.voices.find(v => v.lang.startsWith('zh'));
+                };
+
+                if (this.synth.onvoiceschanged !== undefined) {
+                    this.synth.onvoiceschanged = populateVoices;
+                }
+                populateVoices();
+            }
+
+            speak(text, sectionId) {
+                if (this.currentSection === sectionId && this.isPaused) {
+                    this.synth.resume();
+                    this.isPaused = false;
+                    this.updateUI(sectionId, true);
+                    return;
+                }
+
+                this.stop();
+                this.currentSection = sectionId;
+                
+                this.utterance = new SpeechSynthesisUtterance(this.processText(text));
+                this.utterance.voice = this.selectedVoice;
+                this.utterance.lang = 'zh-CN';
+                this.utterance.rate = 0.9;
+                this.utterance.pitch = 1;
+
+                this.utterance.onstart = () => this.updateUI(sectionId, true);
+                this.utterance.onend = this.utterance.onerror = () => this.handleSpeechEnd();
+                
+                this.synth.speak(this.utterance);
+            }
+
+            processText(text) {
+                return text.replace(/★/g, '')
+                           .replace(/\t/g, ' ')
+                           .replace(/\([^)]+\)/g, '') // 去除拼音
+                           .replace(/\s{2,}/g, ' ');
+            }
+
+            updateUI(sectionId, isSpeaking) {
+                document.querySelectorAll('.play-button, .status-indicator').forEach(el => {
+                    const btn = el.closest('.speech-controls')?.querySelector('.play-button');
+                    if (btn) {
+                        if (btn.dataset.section === sectionId) {
+                            btn.innerHTML = isSpeaking ? '<i>⏸</i> 暂停' : '<i>▶</i> 朗读';
+                            btn.dataset.state = isSpeaking ? 'playing' : '';
+                            el.querySelector('.status-indicator')?.classList.toggle('active', isSpeaking);
+                        } else {
+                            btn.innerHTML = '<i>▶</i> 朗读';
+                            btn.dataset.state = '';
+                            el.querySelector('.status-indicator')?.classList.remove('active');
+                        }
+                    }
+                });
+            }
+
+            handleSpeechEnd() {
+                this.currentSection = null;
+                this.isPaused = false;
+                this.updateUI(null, false);
+            }
+
+            pause() {
+                if (this.synth.speaking && !this.isPaused) {
+                    this.synth.pause();
+                    this.isPaused = true;
+                    this.updateUI(this.currentSection, false);
+                }
+            }
+
+            stop() {
+                this.synth.cancel();
+                this.handleSpeechEnd();
+            }
+
+            togglePlay(text, sectionId) {
+                if (this.currentSection === sectionId) {
+                    if (this.isPaused) {
+                        this.speak(text, sectionId);
+                    } else {
+                        this.pause();
+                    }
+                } else {
+                    this.speak(text, sectionId);
+                }
+            }
+        }
+
+        const speech = new SpeechController();
+                // 所有诵读内容数据
+        const recitationData = [
+            {
+                id: 'toc',
+                title: '目录',
+                content: ''  // 这将在后面生成
+            },
+            {
+                id: 'recitation1',
+                title: '诵读 一',
+                content: `★\t 美文               
+                 春(chūn) 笋(sǔn)
+一(yì) 声(shēnɡ) 春(chūn) 雷(léi) ，唤(huàn) 醒(xǐnɡ) 了(le) 春(chūn) 笋(sǔn) 。它(tā) 们(men) 冲(chōnɡ) 破(pò) 泥(ní) 土(tǔ) ，掀(xiān) 翻(fān) 石(shí) 块(kuài) ，一(yí) 个(ɡe) 一(yi) 个(ɡe) 从(cónɡ) 地(dì) 里(lǐ) 冒(mào) 出(chū) 来(lái) 。
+春(chūn) 笋(sǔn) 裹(ɡuǒ) 着(zhe) 浅(qiǎn) 褐(hè) 色(sè) 的(de) 外(wài) 衣(yī) ，像(xiànɡ) 嫩(nèn) 生(shēnɡ) 生(shēnɡ) 的(de) 娃(wá) 娃(wɑ) 。它(tā) 们(men) 迎(yínɡ) 着(zhe) 春(chūn) 风(fēnɡ) ，在(zài) 阳(yánɡ) 光(ɡuānɡ) 中(zhōnɡ) 笑(xiào) ，在(zài) 春(chūn) 雨(yǔ) 里(lǐ) 长(zhǎnɡ) 。一(yì) 节(jié) ，一(yì) 节(jié) ，又(yòu) 一(yì) 节(jié) 。向(xiànɡ) 上(shànɡ) ，向(xiànɡ) 上(shànɡ) ，再(zài) 向(xiànɡ) 上(shànɡ) 。
+★古诗诵读
+《浪淘沙·其七》
+唐代·刘禹锡
+八月涛声吼地来，头高数丈触山回。
+须臾却入海门去，卷起沙堆似雪堆。
+
+★好习惯
+                          上课
+上课铃声响， 赶快进课堂。
+书和文具盒 ，摆在桌子上。
+安静坐好迎老师，
+精神饱满学知识。`
+            },
+            {
+                id: 'recitation2',
+                title: '诵读 二',
+                content: `★朗朗上口   
+晨(chén)读(dú)对(duì)韵(yùn)（一(yī)）
+天(tiān)对(duì)地(dì)，室(shì)对(duì)家(jiā)，落(luò)日(rì)对(duì)流(liú)霞(xiá)。
+黄(huáng)莺(yīng)对(duì)翠(cuì)鸟(niǎo)，甜(tián)菜(cài)对(duì)苦(kǔ)瓜(guā)。
+狗(gǒu)尾(wěi)草(cǎo)，鸡(jī)冠(guān)花(huā)。
+白(bái)鹭(lù)对(duì)乌(wū)鸦(yā)。
+门(mén)前(qián)栽(zāi)果(guǒ)树(shù)，塘(táng)里(lǐ)养(yǎng)鱼(yú)虾(xiā)。
+有(yǒu)时(shí)三(sān)点(diǎn)两(liǎng)点(diǎn)雨(yǔ)，到(dào)处(chù)十(shí)枝(zhī)五(wǔ)枝(zhī)花(huā)。
+★古诗诵读
+《出塞》
+唐代·王昌龄
+秦时明月汉时关，万里长征人未还。
+ 但使龙城飞将在，不教胡马度阴山。
+★好习惯
+                 我是小学生
+我是小学生，书包自己清。每天看课表，用具都带好。
+晚上按时睡，早上起得早。上课有精神，一定学习好。`
+            },
+            {
+                id: 'recitation3',
+                title: '诵读 三',
+                content: `★\t美文
+小(xiǎo) 池(chí) 塘(tánɡ) 
+春(chūn) 风(fēnɡ) 姐(jiě) 姐(jie) 轻(qīnɡ) 轻(qīnɡ) 吹(chuī) 了(le) 一(yì) 口(kǒu) 气(qì) ，小(xiǎo) 池(chí) 塘(tánɡ) 就(jiù) 醒(xǐnɡ) 来(lái) 了(le) 。池(chí) 塘(tánɡ) 里(lǐ) 的(de) 水(shuǐ) 波(bō) 一(yì) 闪(shǎn) 一(yì) 闪(shǎn) 的(de) ，像(xiànɡ) 一(yì) 只(zhī) 明(mínɡ) 亮(liànɡ) 的(de) 大(dà) 眼(yǎn) 睛(jinɡ) 。池(chí) 塘(tánɡ) 边(biān) 的(de) 芦(lú) 苇(wěi) 长(zhǎnɡ) 起(qǐ) 来(lái) 了(le) ，像(xiànɡ) 长(chánɡ) 长(chánɡ) 的(de) 睫(jié) 毛(máo) 。白(bái) 云(yún) 倒(dào) 映(yìnɡ) 在(zài) 池(chí) 塘(tánɡ) 里(lǐ) ，像(xiànɡ) 一(yì) 群(qún) 白(bái) 鹅(é) 。 太(?tài) 阳(yánɡ) 倒(dào) 映(yìnɡ) 在(zài) 池(chí) 塘(tánɡ) 里(lǐ) ，像(xiànɡ) 一(yì) 只(zhī) 鲜(xiān) 红(hónɡ) 的(de) 气(qì) 球(qiú) 。月(yuè) 牙(yá) 倒(dào) 映(yìnɡ) 在(zài) 池(chí) 塘(tánɡ) 里(lǐ) ，像(xiànɡ) 一(yì) 只(zhī) 弯(wān) 弯(wān) 的(de) 小(xiǎo) 船(chuán) 。星(xīnɡ) 星(xinɡ) 倒(dào) 映(yìnɡ) 在(zài) 池(chí) 塘(tánɡ) 里(lǐ) ，像(xiànɡ) 许(xǔ) 多(duō) 闪(shǎn) 亮(liànɡ) 的(de) 珍(zhēn) 珠(zhū) 。
+明(mínɡ) 亮(liànɡ) 的(de) 小(xiǎo) 池(chí) 塘(tánɡ) ，美(měi) 丽(lì) 的(de) 大(dà) 眼(yǎn) 睛(jinɡ) ，映(yìnɡ) 出(chū) 一(yí) 个(ɡè) 五(wú) 彩(cǎi) 的(de) 世(shì) 界(jiè) 。`
+            },
+            {
+                id: 'recitation4',
+                title: '诵读 四',
+                content: `★朗朗上口        
+ 晨(chén)读(dú)对(duì)韵(yùn)（二(èr)）
+优(yōu)对(duì)劣(liè)，丑(chǒu)对(duì)佳(jiā)，肃(sù)静(jìng)对(duì)喧(xuān)哗(huá)。
+  光(guāng)明(míng)对(duì)黑(hēi)暗(àn)，谨(jǐn)慎(shèn)对(duì)浮(fú)夸(kuā)。
+瓜(guā)子(zǐ)脸(liǎn)，葡(pú)萄(táo)牙(yá)。
+异(yì)卉(huì)对(duì)奇(qí)葩(pā)。
+  知(zhī)己(jǐ)存(cún)海(hǎi)内(nèi)，朋(péng)友(you)遍(biàn)天(tiān)涯(yá)。
+       黄(huáng)梅(méi)时(shí)节(jié)家(jiā)家(jiā)雨(yǔ)，青(qīng)草(cǎo)池(chí)塘(táng)处(chù)处(chù)蛙(wā)。
+★古诗诵读
+《黄鹤楼送孟浩然之广陵》
+唐代 · 李白
+故人西辞黄鹤楼，烟花三月下扬州。
+孤帆远影碧空尽，唯见长江天际流。 
+                                          
+★好习惯
+坐姿歌
+头摆正，肩摆平，脊柱直，胸前挺。
+大腿对称要放松，小腿竖直放平行。
+双脚向前摆得正，双臂用力要均衡。
+读书写字都坐好，天天是个好学生。`
+            },
+            {
+                id: 'recitation5',
+                title: '诵读 五',
+                content: `★\t美文      
+草(cǎo) 原(yuán) 的(de) 早(zǎo) 晨(chén) 
+"啪(pā) ！啪(pā) ！"响(xiǎnɡ) 亮(liànɡ) 的(de) 鞭(biān) 声(shēnɡ) 打(dǎ) 破(pò) 了(le) 黎(lí) 明(mínɡ) 的(de) 宁(nínɡ) 静(jìnɡ) 。铺(pū) 满(mǎn) 新(xīn) 绿(lǜ) 的(de) 草(cǎo) 原(yuán) 醒(xǐnɡ) 来(lái) 了(le) 。
+一(yì) 只(zhī) 只(zhī) 羊(yánɡ) 儿(ér) 涌(yǒnɡ) 进(jìn) 了(le) 圈(juàn) 门(mén) ，蹦(bènɡ) 跳(tiào) 着(zhe) 奔(bèn) 向(xiànɡ) 无(wú) 边(biān) 的(de) 草(cǎo) 原(yuán) 。牧(mù) 民(mín) 们(men) 跨(kuà) 上(shànɡ) 骏(jùn) 马(mǎ) ，追(zhuī) 赶(ɡǎn) 那(nà) 欢(huān) 乐(lè) 的(de) 羊(yánɡ) 群(qún) 。
+远(yuǎn) 处(chù) ，一(yì) 群(qún) 群(qún) 羊(yánɡ) 儿(ér) 像(xiànɡ) 朵(duǒ) 朵(duǒ) 白(bái) 云(yún) 在(zài) 飘(piāo) 动(dònɡ) ，蓝(lán) 天(tiān) 下(xià) 回(huí) 荡(dànɡ) 着(zhe) 牧(mù) 羊(yánɡ) 人(rén) 的(de) 歌(ɡē) 声(shēnɡ) 。`
+            },
+            {
+                id: 'recitation6',
+                title: '诵读 六',
+                content: `★朗朗上口
+晨(chén)读(dú)对(duì)韵(yùn)（三(sān)）
+繁(fán)对(duì)简(jiǎn)，少(shǎo)对(duì)多(duō)，淅(xī)沥(lì)对(duì)滂(pāng)沱(tuó)。
+珊(shān)瑚(hú)对(duì)玛(mǎ)瑙(nǎo)，河(hé)蚌(bàng)对(duì)田(tián)螺(luó)。
+星(xīng)妩(wǔ)媚(mèi)，月(yuè)婆(pó)娑(suō)。
+曲(qǔ)径(jìng)对(duì)斜(xié)坡(pō)。
+黄(huáng)鹂(lí)歌(gē)婉(wǎn)转(zhuǎn)，绿(lǜ)柳(liǔ)舞(wǔ)婀(ē)娜(nuó)。
+  芳(fāng)林(lín)新(xīn)叶(yè)催(cuī)陈(chén)叶(yè)，流(liú)水(shuǐ)前(qián)波(bō)让(ràng)后(hòu)波(bō)。
+★古诗诵读
+《送元二使安西》
+唐代·王维
+渭城朝雨浥轻尘，客舍青青柳色新。
+劝君更尽一杯酒，西出阳关无故人。 
+★好习惯
+文明礼貌歌
+晨风吹，阳光照，我们从小讲礼貌。
+见到老师问声好，碰到同学说声早，
+不为小事而争吵，发生矛盾不能恼，
+我是懂事乖宝宝，吹响文明小号角。`
+            },
+            {
+                id: 'recitation7',
+                title: '诵读 七',
+                content: `★\t美文              
+海(hǎi) 上(shànɡ) 的(de) 风(fēnɡ) 
+海(hǎi) 上(shànɡ) 的(de) 风(fēnɡ) 是(shì) 花(huā) 神(shén) ，它(tā) 一(yì) 来(lái) ，就(jiù) 溅(jiàn) 起(qǐ) 万(wàn) 朵(duǒ) 浪(lànɡ) 花(huā) 。
+海(hǎi) 上(shànɡ) 的(de) 风(fēnɡ) 是(shì) 琴(qín) 师(shī) ，它(tā) 一(yì) 来(lái) ，就(jiù) 奏(zòu) 出(chū) 万(wàn) 种(zhǒnɡ) 乐(yuè) 曲(qǔ) 。
+海(hǎi) 上(shànɡ) 的(de) 风(fēnɡ) 是(shì) 大(dà) 力(lì) 士(shì) ，它(tā) 一(yì) 来(lái) ,送(sònɡ) 走(zǒu) 万(wàn) 片(piàn) 云(yún) 帆(fān) 。
+海(hǎi) 上(shànɡ) 的(de) 风(fēnɡ) 是(shì) 狮(shī) 子(zi) ，它(tā) 一(yì) 吼(hǒu) ,就(jiù) 掀(xiān) 起(qǐ) 滔(tāo) 天(tiān) 波(bō) 浪(lànɡ) 。`
+            },
+            {
+                id: 'recitation8',
+                title: '诵读 八',
+                content: `★朗朗上口
+晨(chén)读(dú)对(duì)韵(yùn)（四(sì)）
+弦(xián)对(duì)管(guǎn)，鼓(gǔ)对(duì)锣(luó)，守(shǒu)卫(wèi)对(duì)巡(xún)逻(luó)。
+观(guān)光(guāng)对(duì)借(jiè)鉴(jiàn)，视(shì)察(chá)对(duì)观(guān)摩(mó)。
+须(xū)奋(fèn)斗(dòu)，莫(mò)蹉(cuō)跎(tuó)。
+北(běi)海(hǎi)对(duì)东(dōng)坡(pō)。
+眼(yǎn)中(zhōng)沧(cāng)海(hǎi)小(xiǎo)，衣(yī)上(shàng)白(bái)云(yún)多(duō)。
+  气(qì)似(sì)长(cháng)虹(hóng)贯(guàn)玉(yù)宇(yǔ)，心(xīn)如(rú)皓(hào)月(yuè)映(yìng)澄(chéng)波(bō)。
+★古诗诵读
+《芙蓉楼送辛渐》
+唐代·王昌龄
+寒雨连江夜入吴，平明送客楚山孤。
+洛阳亲友如相问，一片冰心在玉壶。 
+ 
+★好习惯
+上课歌
+上课铃声响，快快进课堂，
+文具齐摆放，静等课来上，
+起立要站直，坐正不乱晃，
+不做小动作，专心来听讲，
+发言先举手，回答不乱抢，
+答题声音响，倾听他人讲，
+争做好学生，人人都夸奖。`
+            },
+            {
+                id: 'recitation9',
+                title: '诵读 九',
+                content: `★\t美文
+太(tài) 阳(yánɡ) ,你(nǐ) 是(shì) 粉(fěn) 刷(shuā) 匠(jiànɡ) 吗(mɑ) 
+太(tài) 阳(yánɡ) ,你(nǐ) 是(shì) 粉(fěn) 刷(shuā) 匠(jiànɡ) 吗(mɑ) ?
+你(nǐ) 把(bǎ) 沙(shā) 滩(tān) 刷(shuā) 得(dé) 金(jīn) 黄(huánɡ) 金(jīn) 黄(huánɡ) ,就(jiù) 像(xiànɡ) 是(shì) 一(yì) 条(tiáo) 用(yònɡ) 黄(huánɡ) 金(jīn) 铺(pū) 设(shè) 的(de) 海(hǎi) 岸(àn) ;你(nǐ) 把(bǎ) 大(dà) 海(hǎi) 刷(shuā) 得(dé) 碧(bì) 蓝(lán) 碧(bì) 蓝(lán) ,就(jiù) 像(xiànɡ)  一(yí) 块(kuài)晶(jīnɡ) 莹(yínɡ) 剔(tī) 透(tòu) 的(de) 蓝(lán) 色(sè) 水(shuǐ) 晶(jīnɡ) ;你(nǐ) 把(bǎ) 天(tiān) 空(kōnɡ) 中(zhōnɡ) 的(dì) 云(yún) 彩(cɑi) ,粉(fěn) 刷(shuā) 得(dé) 那(nà) 么(me) 洁(jié) 白(bái) ,就(jiù)像(xiànɡ) 一(yì) 条(tiáo) 轻(qīnɡ) 柔(róu) 飘(piāo) 曳(yè) 的(de) 纱(shā) 巾(jīn) ……
+你(nǐ) 瞧(qiáo) ，海(hǎi) 滩(tān) 上(shànɡ) 的(de) 两(liǎnɡ) 位(wèi) 小(xiǎo) 朋(pénɡ)友(you) ，原(yuán) 先(xiān) 他(tā) 们(men) 是(shì) 那(nà) 样(yànɡ) 的(de) 白(bái) ，可(kě) 你(nǐ) 把(bǎ) 他(tā) 们(men) 粉(fěn) 刷(shuā) 得(dé) 像(xiànɡ) 两(liǎnɡ) 块(kuài) 黝(yǒu) 黑(hēi) 黝(yǒu) 黑(hēi) 的(de) 岩(yán) 石(shí) 。多(duō) 么(me) 健(jiàn) 壮(zhuànɡ) 的(de) "岩(yán) 石(shí) "。
+太(tài) 阳(yánɡ) ,你(nǐ) 是(shì) 粉(fěn) 刷(shuā) 匠(jiànɡ) 吗(mɑ) ？
+★古诗诵读
+《赠刘景文》
+宋代 · 苏轼
+荷尽已无擎雨盖，菊残犹有傲霜枝。
+一年好景君须记，最是橙黄橘绿时。 `
+            },
+            {
+                id: 'recitation10',
+                title: '诵读 十',
+                content: `★朗朗上口
+晨(chén)读(dú)对(duì)韵(yùn)（五(wǔ)）
+萍(píng)对(duì)藻(zǎo)，菊(jú)对(duì)荷(hé)，黄(huáng)豆(dòu)对(duì)青(qīng)稞(kē)。
+桃(táo)枝(zhī)对(duì)柳(liǔ)叶(yè)，放(fàng)鹤(hè)对(duì)观(guān)鹅(é)。
+小(xiǎo)夜(yè)曲(qǔ)，大(dà)风(fēng)歌(gē)。
+潋(liàn)滟(yàn)对(duì)嵯(cuó)峨(é)。
+举(jǔ)头(tóu)红(hóng)日(rì)近(jìn)，回(huí)首(shǒu)白(bái)云(yún)遮(zhē)。
+   坐(zuò)地(dì)日(rì)行(háng)八(bā)万(wàn)里(lǐ)，巡(xún)天(tiān)遥(yáo)看(kàn)一(yī)千(qiān)河(hé)。
+★古诗诵读
+《竹石》
+清代·郑燮
+咬定青山不放松，立根原在破岩中。
+千磨万击还坚劲，任尔东西南北风。 
+★\t好习惯                  
+听 讲 歌
+小朋友坐坐好，上课我们做做操。
+不伸臂不踢腿，只需调动小脑袋。
+小眼睛看老师，沟通交流全靠它。
+小耳朵认真听，句句入耳记得牢。
+小嘴巴大声说，积极表达进步大。
+小脑子快快转，认真思考人人夸！`
+            },
+            {
+                id: 'recitation11',
+                title: '诵读 十一',
+                content: `★美文
+鸟(niǎo) 岛(dǎo)
+下(xià) 课(kè) 了(le) ，校(xiào) 园(yuán) ，像(xiànɡ) 一(yí) 个(ɡè) 鸟(niǎo) 岛(dǎo) 。
+美(měi) 的(de) 交(jiāo) 响(xiǎnɡ) 回(huí) 旋(xuán) 在(zài) 这(zhè) 一(yí) 片(piàn) 乐(lè) 土(tǔ) 。花(huā) 丛(cónɡ) 树(shù) 下(xià) ，草(cǎo) 坪(pínɡ) 操(cāo) 场(chǎnɡ) ，运(yùn) 动(dònɡ) 衫(shān) ，彩(cǎi) 裙(qún) ……飞(fēi) 翔(xiánɡ) 的(de) 、流(liú) 动(dònɡ) 的(de) 身(shēn) 影(yǐnɡ) ，旋(xuán) 转(zhuǎn) 的(de) 舞(wǔ) 步(bù) ，亭(tínɡ) 亭(tínɡ) 玉(yù) 立(lì) 的(de) 风(fēnɡ) 姿(zī) ，像(xiànɡ) 鸟(niǎo) 儿(ér) 款(kuǎn) 款(kuǎn) 的(de) 低(dī) 飞(fēi) ，欢(huān) 快(kuài) 的(de) 跃(yuè) 动(dònɡ) ，像(xiànɡ) 鸟(niǎo) 儿(ér) 展(zhǎn) 翅(chì) 的(de) 舞(wú) 蹈(dǎo) ，恬(tián) 静(jìnɡ) 的(de) 栖(qī) 息(xī) 。歌(ɡē) 声(shēnɡ) ，笑(xiào) 语(yǔ) ，像(xiànɡ) 海(hǎi) 潮(cháo) 的(de) 喧(xuān) 哗(huá) 中(zhōnɡ) ，鸟(niǎo) 儿(ér) 倾(qīnɡ) 心(xīn) 地(dì) 鸣(mínɡ) 啭(zhuàn) 。
+同(tónɡ) 浴(yù) 着(zhe) 阳(yánɡ) 光(ɡuānɡ) ，共(ɡònɡ) 享(xiǎnɡ) 着(zhe) 欢(huān) 乐(lè) ，又(yòu) 增(zēnɡ) 添(tiān) 着(zhe) 温(wēn) 暖(nuǎn) ，充(chōnɡ) 实(shí) 着(zhe) 幸(xìnɡ) 福(fú) 。
+啊(ā) ， 一(?yí) 个(ɡè) 生(shēnɡ) 机(jī) 勃(bó) 勃(bó) 的(de) 鸟(niǎo) 岛(dǎo) 。
+★古诗诵读
+《山居秋暝》
+唐代 · 王维
+空山新雨后，天气晚来秋。
+明月松间照，清泉石上流。
+竹喧归浣女，莲动下渔舟。
+随意春芳歇，王孙自可留。`
+            },
+            {
+                id: 'recitation12',
+                title: '诵读 十二',
+                content: `★ 朗朗上口
+晨(chén)读(dú)对(duì)韵(yùn)（六(liù)）
+勤(qín)对(duì)懒(lǎn)，俭(jiǎn)对(duì)奢(shē)，琐(suǒ)碎(suì)对(duì)繁(fán)苛(kē)。
+冰(bīng)清(qīng)对(duì)玉(yù)润(rùn)，地(dì)利(lì)对(duì)人(rén)和(hé)。
+行(háng)踽(jǔ)踽(jǔ)，笑(xiào)呵(hē)呵(hē)。
+欣(xīn)赏(shǎng)对(duì)吟(yín)哦(é)。
+下(xià)笔(bǐ)即(jí)千(qiān)字(zì)，读(dú)书(shū)倾(qīng)五(wǔ)车(chē)。 生(shēng)有(yǒu)光(guāng)辉(huī)照(zhào)日(rì)月(yuè)，死(sǐ)留(liú)正(zhèng)气(qì)壮(zhuàng)山(shān)河(hé)。
+★古诗诵读
+《题西林壁》
+宋代·苏轼
+横看成岭侧成峰，远近高低各不同。
+不识庐山真面目，只缘身在此山中。
+★好习惯
+握笔歌
+食指拇指捏着，三指四指托着，
+小指在后藏着，笔尖向前斜着，
+笔杆向后靠着。轻轻松松提起笔，
+平心静气来写字。`
+            },
+            {
+                id: 'recitation13',
+                title: '诵读 十三',
+                content: `★美文             月(yuè) 亮(liɑnɡ) 湾(wān) 
+我(wǒ) 的(de) 家(jiā) 在(zài) 月(yuè) 亮(liɑnɡ) 湾(wān) ，月(yuè) 亮(liɑnɡ) 湾(wān)是(shì) 个(ɡè) 美(měi) 丽(lì) 的(de) 村(cūn) 子(zi) 。
+村(cūn) 子(zi) 的(de) 前(qián) 面(miɑn) 有(yǒu) 一(yì) 条(tiáo) 月(yuè) 牙(yá) 一(yí) 样(yànɡ) 的(de) 小(xiǎo) 河(hé) ，河(hé) 上(shànɡ) 有(yǒu) 一(yí) 座(zuò) 石(shí) 桥(qiáo) 。河(hé) 水(shuǐ) 绕(rào) 着(zhe) 村(cūn) 子(zi) 缓(huán) 缓(huǎn) 地(de) 流(liú) 着(zhe) ，一(yì) 群(qún) 群(qún) 鱼(yú) 儿(ér) 在(zài) 河(hé) 里(lǐ) 游(yóu) 来(lái) 游(yóu) 去(qù) 。清(qīnɡ) 清(qīnɡ) 的(de) 河(hé) 水(shuǐ) 倒(dào) 映(yìnɡ) 着(zhe) 小(xiǎo) 桥(qiáo) 、绿(lǜ) 树(shù) 和(hé) 青(qīnɡ) 山(shān) 。河(hé) 岸(àn) 上(shànɡ) 长(zhǎnɡ) 着(zhe) 许(xǔ) 多(duō) 桃(táo) 树(shù) 。春(chūn) 天(tiān) ，树(shù) 上(shànɡ) 开(kāi) 满(mǎn) 了(le) 桃(táo) 花(huā) ，远(yuǎn) 远(yuǎn) 望(wànɡ) 去(qù) ，像(xiànɡ) 一(yí) 片(piàn) 灿(càn) 烂(làn) 的(de) 朝(zhāo) 霞(xiá) 。过(ɡuò) 了(le) 桥(qiáo) ，是(shì) 一(yí) 片(piàn) 绿(lǜ) 油(yóu) 油(yóu) 的(de) 农(nónɡ) 田(tián) 。村(cūn) 子(zi) 的(de) 后(hòu) 面(miɑn) 是(shì) 山(shān) 。山(shān) 坡(pō) 上(shànɡ) 有(yǒu) 一(yí) 片(piàn) 茶(chá) 树(shù) 。花(huā) 园(yuán) 里(lǐ) 不(bù) 时(shí) 飘(piāo) 来(lái) 采(cǎi) 茶(chá) 姑(ɡū) 娘(niɑnɡ) 欢(huān) 快(kuài) 的(de) 笑(xiào) 声(shēnɡ) 。
+★古诗诵读
+《泊船瓜洲》
+宋代 · 王安石
+京口瓜洲一水间，钟山只隔数重山。
+春风又绿江南岸，明月何时照我还。 `
+            },
+            {
+                id: 'recitation14',
+                title: '诵读 十四',
+                content: `★朗朗上口
+晨(chén)读(dú)对(duì)韵(yùn)（七(qī)）
+庭(tíng)对(duì)院(yuàn)，井(jǐng)对(duì)池(chí)，落(luò)絮(xù)对(duì)游(yóu)丝(sī)。
+飞(fēi)禽(qín)对(duì)走(zǒu)兽(shòu)，骏(jùn)马(mǎ)对(duì)雄(xióng)狮(shī)。
+三(sān)国(guó)志(zhì)，七(qī)步(bù)诗(shī)。
+错(cuò)落(luò)对(duì)参(cēn)差(cī)。
+行(háng)到(dào)水(shuǐ)穷(qióng)处(chù)，坐(zuò)看(kàn)云(yún)起(qǐ)时(shí)。
+  侧(cè)身(shēn)天(tiān)地(dì)更(gèng)怀(huái)古(gǔ)，独(dú)立(lì)苍(cāng)茫(máng)自(zì)咏(yǒng)诗(shī)。
+★古诗诵读
+《凉州词》
+唐代 · 王之涣
+黄河远上白云间，一片孤城万仞山。
+羌笛何须怨杨柳，春风不度玉门关。 
+★好习惯
+课间歌
+课间活动真有趣，
+大家都来做游戏。
+不推不挤不打闹，
+人人安全要做到。`
+            },
+            {
+                id: 'recitation15',
+                title: '诵读 十五',
+                content: `★\t美文          夕(xī) 阳(yánɡ) 真(zhēn) 美(měi) 
+傍(bànɡ) 晚(wǎn) ，爷(yé) 爷(ye) 和(hé) 奶(nǎi) 奶(nɑi) 带(dài) 着(zhe) 我(wǒ) 去(qù) 看(kàn) 日(rì) 落(luò) 。
+太(tài) 阳(yánɡ) 已(yǐ) 经(jīnɡ) 西(xī) 斜(xié) ，收(shōu) 起(qǐ) 了(le) 刺(cì) 眼(yǎn) 的(de) 光(ɡuānɡ) 芒(mánɡ) 。天(tiān) 空(kōnɡ) 一(yí) 片(piàn) 深(shēn) 蓝(lán) 。连(lián) 绵(mián) 起(qǐ) 伏(fú) 的(de) 西(xī) 山(shān) ，披(pī) 着(zhe) 夕(xī) 阳(yánɡ) 的(de) 余(yú) 晖(huī) ，显(xiǎn) 得(dé) 十(shí) 分(fēn) 壮(zhuànɡ) 丽(lì) 。太(tài) 阳(yánɡ) 慢(màn) 慢(màn) 地(de) 往(wǎnɡ) 下(xià) 沉(chén) 。它(tā) 那(nà) 圆(yuán) 圆(yuán) 的(de) 脸(liǎn) 涨(zhànɡ) 红(hónɡ) 了(le) ，把(bǎ) 身(shēn) 边(biān) 的(de) 云(yún) 染(rǎn) 成(chénɡ) 了(le) 黄(huánɡ) 色(sè) 、红(hónɡ) 色(sè) 、紫(zǐ) 色(sè) ……太(tài) 阳(yánɡ) 的(de) 脸(liǎn) 变(biàn) 得(de) 更(ɡènɡ) 红(hónɡ) 了(le) 。它(tā) 轻(qīnɡ) 轻(qīnɡ) 地(de) 走(zǒu) 向(xiànɡ) 西(xī) 山(shān) 的(de) 背(bèi) 后(hòu) ，把(bǎ) 灿(càn) 烂(làn) 的(de) 霞(xiá) 光(ɡuānɡ) 留(liú) 在(zài) 遥(yáo) 远(yuǎn) 的(de) 天(tiān) 边(biān) 。
+爷(yé) 爷(ye) 满(mǎn) 面(miàn) 红(hónɡ) 光(ɡuānɡ) ，望(wànɡ) 着(zhe) 奶(nǎi) 奶(nɑi) 说(shuō) ："夕(xī) 阳(yánɡ) 真(zhēn) 美(měi) 呀(yɑ) ！"
+★古诗诵读
+《晓出净慈寺送林子方》
+宋代 · 杨万里
+毕竟西湖六月中，风光不与四时同。
+接天莲叶无穷碧，映日荷花别样红。 `
+            },
+            {
+                id: 'recitation16',
+                title: '诵读 十六',
+                content: `★朗朗上口
+晨(chén)读(dú)对(duì)韵(yùn)（八(bā)）
+行(háng)对(duì)止(zhǐ)，善(shàn)对(duì)慈(cí)，本(běn)性(xìng)对(duì)天(tiān)资(zī)。
+粗(cū)心(xīn)对(duì)大(dà)胆(dǎn)，益(yì)友(yǒu)对(duì)良(liáng)师(shī)。
+孙(sūn)行(xíng)者(zhě)，祖(zǔ)冲(chōng)之(zhī)。
+鲁(lǔ)迅(xùn)对(duì)徐(xú)迟(chí)。
+笔(bǐ)扫(sǎo)龙(lóng)蛇(shé)字(zì)，胸(xiōng)藏(cáng)锦(jǐn)绣(xiù)词(cí)。
+  偏(piān)多(duō)热(rè)血(xuè)偏(piān)多(duō)骨(gǔ)，不(bú)会(huì)真(zhēn)情(qíng)不(bù)悔(huǐ)痴(chī)。
+★古诗诵读
+                      早春野望
+唐·王勃
+江旷春潮白，山长晓岫青。
+他乡临睨极，花柳映边亭。
+★好习惯
+回家谣
+说声再见离学校，准时回家要做到。
+完成作业要自觉，复习预习少不了。
+睡前准备好用具，早睡早起身体好。`
+            },
+            {
+                id: 'recitation17',
+                title: '诵读 十七',
+                content: `★童谣
+我(wǒ) 们(men) 都(dōu) 是(shì) 好(hǎo) 朋(péng) 友(yǒu)
+小(xiǎo) 鸟(niǎo) 儿(er)，成(chéng) 群(qún) 飞(fēi)，
+小(xiǎo) 鱼(yú)  儿(er)，成(chéng) 群(qún) 游(yóu)，
+小(xiǎo) 朋(péng) 友(yǒu)，手(shǒu) 拉(lā) 手(shǒu)，
+排(pái) 起(qǐ) 队(duì) 伍(wǔ) 向(xiàng) 前(qián) 走(zǒu)，
+唱(chàng) 着(zhe) 歌(gē)， 拍(pāi) 着(zhe) 手(shǒu)，
+我(wǒ) 们(men) 都(dōu) 是(shì) 好(hǎo) 朋(péng) 友(yǒu)。
+★古诗诵读
+山行  
+清代·施闰章 
+野寺分晴树，山亭过晚霞。
+春深无客到，一路落松花。  `
+            },
+            {
+                id: 'recitation18',
+                title: '诵读 十八',
+                content: `★朗朗上口
+晨(chén)读(dú)对(duì)韵(yùn)（九(jiǔ)）
+河(hé)对(duì)海(hǎi)，涧(jiàn)对(duì)溪(xī)，远(yuǎn)近(jìn)对(duì)高(gāo)低(dī)。
+奇(qí)珍(zhēn)对(duì)异(yì)宝(bǎo)，琥(hǔ)珀(pò)对(duì)琉(liú)璃(lí)。
+桃(táo)灼(zhuó)灼(zhuó)，柳(liǔ)依(yī)依(yī)。
+龙(lóng)眼(yǎn)对(duì)马(mǎ)蹄(tí)。
+掬(jū)水(shuǐ)月(yuè)在(zài)手(shǒu)，拈(niān)花(huā)香(xiāng)满(mǎn)衣(yī)。
+几(jǐ)处(chù)早(zǎo)莺(yīng)争(zhēng)暖(nuǎn)树(shù)，谁(shuí)家(jiā)新(xīn)燕(yàn)啄(zhuó)春(chūn)泥(ní)。
+★古诗诵读
+春风
+清代·袁枚
+春风如贵客，一到便繁华。
+来扫千山雪，归留万国花。
+★好习惯
+写字歌
+学写字，要牢记，头正肩平脚着地，
+三个"一"不忘记。眼离书本一尺远，
+胸离桌边有一拳，手离笔尖要一寸。
+提笔既是练字时，养成习惯易终生！`
+            },
+            {
+                id: 'recitation19',
+                title: '诵读 十九',
+                content: `★童谣
+小(xiǎo) 蚂(mǎ) 蚁(yǐ)
+小(xiǎo) 蚂(mǎ) 蚁(yǐ)，真(zhēn) 有(yǒu) 趣(qù)，
+见(jiàn) 面(miàn) 碰(pèng) 碰(pèng) 小(xiǎo) 胡(hú) 须(xū)。
+你(nǐ) 碰(pèng) 我(wǒ)，我(wǒ) 碰(pèng) 你(nǐ)，
+报(bào) 告(gào) 一(yí) 个(gè) 好(hǎo) 消(xiāo) 息(xī)！
+排(pái) 队(duì) 走(zǒu)，一(yī) 二(èr) 一(yī)，
+大(dà) 家(jiā) 去(qù) 抬(tái) 一(yí) 粒(lì) 米(mǐ)。 
+★古诗诵读
+桃花 
+唐代·元稹
+桃花浅深处，似匀深浅妆。
+春风助肠断，吹落白衣裳。`
+            },
+            {
+                id: 'recitation20',
+                title: '诵读 二十',
+                content: `★朗朗上口
+晨(chén)读(dú)对(duì)韵(yùn)（十(shí)）
+来(lái)对(duì)往(wǎng)，密(mì)对(duì)稀(xī)，来(lái)日(rì)对(duì)往(wǎng)昔(xī)。
+眼(yǎn)明(míng)对(duì)手(shǒu)快(kuài)，心(xīn)旷(kuàng)对(duì)神(shén)怡(yí)。
+千(qiān)里(lǐ)马(mǎ)，五(wǔ)更(gēng)鸡(jī)。
+暮(mù)霭(ǎi)对(duì)晨(chén)曦(xī)。
+高(gāo)谈(tán)惊(jīng)左(zuǒ)右(yòu)，博(bó)学(xué)贯(guàn)中(zhōng)西(xī)。
+天(tiān)上(shàng)月(yuè)悬(xuán)千(qiān)古(gǔ)镜(jìng)，池(chí)中(zhōng)星(xīng)照(zhào)一(yī)盘(pán)棋(qí)。
+★古诗诵读
+赠范晔诗
+南北朝·陆凯
+折花逢驿使，寄与陇头人。
+江南无所有，聊赠一枝春。
+
+★好习惯
+走路歌
+教室里，轻轻走.，走廊上，慢慢走，
+转弯口，减速走，上下楼梯靠右走。
+几人结伴不打闹，集体行动列队走，
+遇上拥挤停三分，主动谦让安全走。`
+            },
+            {
+                id: 'recitation21',
+                title: '诵读 二十一',
+                content: `★童谣
+雷(léi) 爸(bà) 爸(bɑ)， 雷(léi) 妈(mā) 妈(mɑ)
+雷(léi) 爸(bà) 爸(bɑ)，雷(léi) 妈(mā) 妈(mɑ)，
+二(èr) 人(rén) 脾(pí) 气(qì) 真(zhēn) 是(shì) 大(dà)。
+只(zhǐ) 要(yào) 心(xīn) 里(lǐ) 不(bù) 高(gāo) 兴(xìng)，
+轰(hōng) 隆(lóng) 轰(hōng) 隆(lóng) 就(jiù) 吵(chǎo)架(jià)。
+还(hái) 要(yào) 动(dòng) 手(shǒu) 摔(shuāi) 东(dōng) 西(xī)，
+咔(kā) 嚓(cā) 咔(kā) 嚓(cā) 卡(kā) 嚓(cā) 嚓(cā)。
+★古诗诵读
+春雨·其一
+宋·陆游
+片片红梅落，纤纤绿草生。
+无端夜来雨，又碍出门行。`
+            },
+            {
+                id: 'recitation22',
+                title: '诵读 二十二',
+                content: `★朗朗上口
+晨(chén)读(dú)对(duì)韵(yùn)（十(shí)一(yī)）
+宽(kuān)对(duì)窄(zhǎi)，显(xiǎn)对(duì)微(wēi)，闪(shǎn)电(diàn)对(duì)鸣(míng)雷(léi)。
+天(tiān)南(nán)对(duì)海(hǎi)北(běi)，红(hóng)瘦(shòu)对(duì)绿(lǜ)肥(féi)。
+潮(cháo)涨(zhǎng)落(luò)，月(yuè)盈(yíng)亏(kuī)。暮(mù)色(sè)对(duì)朝(zhāo)晖(huī)。
+明(míng)月(yuè)松(sōng)间(jiān)照(zhào)，春(chūn)风(fēng)柳(liǔ)上(shàng)归(guī)。
+穿(chuān)花(huā)蛱(jiá)蝶(dié)深(shēn)深(shēn)见(jiàn)，点(diǎn)水(shuǐ)蜻(qīng)蜓(tíng)款(kuǎn)款(kuǎn)飞(fēi)。
+★古诗诵读
+春景
+                    唐·李白
+             门对鹤溪流水，云连雁宕仙家。
+                 谁解幽人幽意，惯看山鸟山花。
+★好习惯
+升  旗
+立正肃立升国旗，仰望国旗徐徐起。
+少先队员行队礼，高唱国歌情无比。
+热爱祖国记心里，革命传统不忘记。`
+            },
+            {
+                id: 'recitation23',
+                title: '诵读 二十三',
+                content: `★童谣
+星(xīng) 星(xing) 谣(yáo)
+数(shǔ) 一(yì) 数(shǔ)，瞧(qiáo) 一(yì) 瞧(qiáo)，
+天(tiān) 上(shàng) 星(xīng) 星(xing) 有(yǒu) 多(duō)少(shǎo)？
+这(zhè) 边(biān) 星(xīng) 星(xing) 多(duō)，
+那(nà) 边(biān) 星(xīng) 星(xing) 少(shǎo)。
+这(zhè) 颗(kē) 星(xīng) 星(xing) 大(dà)，
+那(nà) 颗(kē) 星(xīng) 星(xing) 小(xiǎo)。
+有(yǒu) 的(de) 星(xīng) 星(xing) 咪(mī) 咪(mī) 笑(xiào)，
+有(yǒu) 的(de) 星(xīng) 星(xing) 睡(shuì) 着(zháo) 了(le)。
+★古诗诵读
+晚春
+唐·韩愈
+草树知春不久归，百般红紫斗芳菲。
+杨花榆荚无才思，惟解漫天作雪飞`
+            },
+            {
+                id: 'recitation24',
+                title: '诵读 二十四',
+                content: `★朗朗上口
+晨(chén)读(dú)对(duì)韵(yùn)（十(shí)二(èr)）
+偏(piān)对(duì)正(zhèng)，是(shì)对(duì)非(fēi)，欣(xīn)喜(xǐ)对(duì)伤(shāng)悲(bēi)。
+青(qīng)山(shān)对(duì)绿(lǜ)水(shuǐ)，草(cǎo)舍(shě)对(duì)柴(chái)扉(fēi)。
+山(shān)突(tū)兀(wù)，水(shuǐ)潆(yíng)洄(huí)。雨(yǔ)打(dǎ)对(duì)风(fēng)吹(chuī)。
+天(tiān)地(dì)入(rù)胸(xiōng)臆(yì)，文(wén)章(zhāng)生(shēng)风(fēng)雷(léi)。
+傲(ào)骨(gǔ)虚(xū)心(xīn)真(zhēn)力(lì)量(liang)热(rè)肠(cháng)冷(lěng)眼(yǎn)大(dà)慈(cí)悲(bēi)。
+★古诗诵读
+苏溪亭
+唐·戴叔伦
+苏溪亭上草漫漫，谁倚东风十二阑。
+燕子不归春事晚，一汀烟雨杏花寒。
+★好习惯
+集  合 
+ 集合活动要守纪，队伍排列"快静齐"
+不说话来不乱挤，不乱走动有秩序。
+   鼓掌热情懂礼仪，人人心中有集体。`
+            },
+            {
+                id: 'recitation25',
+                title: '诵读 二十五',
+                content: `★儿 歌
+自(zì) 立(lì) 歌(gē)
+滴(dī) 自(zì) 己(jǐ) 的(de) 汗(hàn)，
+吃(chī) 自(zì) 己(jǐ) 的(de) 饭(fàn)，
+自(zì) 己(jǐ) 的(de) 事(shì) 情(qíng) 自(zì) 己(jǐ) 干(gàn)。
+靠(kào) 天(tiān) 靠(kào) 地(dì) 靠(kào) 父(fù) 母(mǔ)，
+不(bú) 算(suàn) 是(shì) 好(hǎo) 汉(hàn)。
+★古诗诵读
+采莲曲
+唐·王昌龄
+荷叶罗裙一色裁,芙蓉向脸两边开。
+乱入池中看不见,闻歌始觉有人来。`
+            },
+            {
+                id: 'recitation26',
+                title: '诵读 二十六',
+                content: `  ★朗朗上口
+晨(chén)读(dú)对(duì)韵(yùn)（十(shí)三(sān)）
+朝(zháo)对(duì)暮(mù)，盛(shèng)对(duì)衰(shuāi)，舞(wǔ)榭(xiè)对(duì)歌(gē)台(tái)。
+风(fēng)清(qīng)对(duì)月(yuè)朗(lǎng)，戏(xì)院(yuàn)对(duì)书(shū)斋(zhāi)。
+桃(táo)叶(yè)渡(dù)，雨(yǔ)花(huā)台(tái)。
+晴(qíng)日(rì)对(duì)阴(yīn)霾(mái)。
+碧(bì)桃(táo)和(hé)露(lù)种(zhǒng)，红(hóng)杏(xìng)倚(yǐ)云(yún)栽(zāi)。
+天(tiān)外(wài)黑(hēi)风(fēng)吹(chuī)海(hǎi)立(lì)，浙(zhè)东(dōng)飞(fēi)鱼(yú)过(guò)江(jiāng)来(lái)。
+★古诗诵读
+约客
+宋朝·赵师秀
+黄梅时节家家雨，青草池塘处处蛙。
+有约不来过夜半，闲敲棋子落灯花。  
+★好习惯
+放 学 
+            环境卫生定好岗，每天值日要做到。 
+清理书桌把地扫，不让纸屑到处跑。 
+ 课桌课椅排整齐， 离校门窗要关好。`
+            },
+            {
+                id: 'recitation27',
+                title: '诵读 二十七',
+                content: `★\t儿歌         
+十(shí) 二(èr) 生(shēng) 肖(xiào) 歌(gē)
+小(xiǎo) 老(lǎo) 鼠(shǔ) 打(dǎ) 头(tóu) 来(lái),牛(niú)  把(bǎ)  蹄(tí) 儿(er) 抬(tái);老(lǎo) 虎(hǔ) 回(huí) 头(tóu) 一(yì) 声(shēng) 吼(hǒu),兔(tù) 儿(er)  跳(tiào) 得(de) 快(kuài);龙(lóng) 和(hé) 蛇(shé) 尾(wěi) 巴(bɑ) 甩(shuǎi) ,马(mǎ) 羊(yáng) 步(bù) 儿(er)  迈(mài);小(xiǎo) 猴(hóu) 机(jī) 灵(líng) 蹦(bèng) 又(yòu) 跳(tiào),鸡(jī) 唱(chàng) 天(tiān) 下(xià) 白(bái);狗(gǒu) 儿(er)  跳(tiào) 猪(zhū) 儿(er)  叫(jiào),老(lǎo) 鼠(shǔ) 又(yòu) 跟(gēn) 来(lái);十(shí) 二(èr) 动(dòng) 物(wù) 转(zhuàn)圈(quān) 跑(pǎo)，请(qǐng) 把(bǎ) 顺(shùn) 序(xù) 排(pái)。
+★古诗诵读
+初夏绝句
+宋·陆游
+纷纷红紫已成尘,布谷声中夏令新。
+夹路桑麻行不尽,始知身是太平人。`
+            },
+            {
+                id: 'recitation28',
+                title: '诵读 二十八',
+                content: `★朗朗上口
+晨(chén)读(dú)对(duì)韵(yùn)（十(shí)四(sì)）
+   忧(yōu)对(duì)喜(xǐ)，乐(lè)对(duì)哀(āi)，信(xìn)任(rèn)对(duì)疑(yí)猜(cāi)。
+风(fēng)餐(cān)对(duì)露(lù)宿(sù)，部(bù)署(shǔ)对(duì)安(ān)排(pái)。
+诗(shī)遣(qiǎn)兴(xìng)，酒(jiǔ)开(kāi)怀(huái)。
+红(hóng)叶(yè)对(duì)绿(lǜ)苔(tái)。
+江(jiāng)从(cóng)万(wàn)里(lǐ)至(zhì)，山(shān)作(zuò)两(liǎng)眉(méi)开(kāi)。
+      波(bō)浑(hún)未(wèi)辨(biàn)鱼(yú)龙(lóng)迹(jì)，岁(suì)寒(hán)方(fāng)识(shí)栋(dòng)梁(liáng)才(cái)。
+★古诗诵读
+客中初夏
+宋朝·司马光
+四月清和雨乍晴，南山当户转分明。
+更无柳絮因风起，惟有葵花向日倾。
+★好习惯
+劳动歌
+小学生，真正好 热爱劳动别忘了，
+我主动，把地扫 擦黑板，没忘掉
+收作业，心情好 老师见了微微笑！`
+            },
+            {
+                id: 'recitation29',
+                title: '诵读 二十九',
+                content: `★童谣
+四(sì) 季(jì) 歌(gē)
+一(yī) 月(yuè) 水(shuǐ) 仙(xiān) 清(qīng) 水(shuǐ)养(yǎng)，
+二(èr) 月(yuè) 杏(xìng) 花(huā) 伸(shēn) 出(chū)墙(qiáng)，
+三(sān) 月(yuè) 桃(táo) 花(huā) 红(hóng) 艳(yàn) 艳(yɑn)，
+四(sì) 月(yuè) 杜(dù) 鹃(juān) 满(mǎn) 山(shān)冈(gāng)，
+         五(wǔ) 月(yuè)  牡(mǔ) 丹(dān) 笑(xiào) 盈(yíng)盈(yíng)，
+六(liù) 月(yuè) 栀(zhī) 子(zi) 戴(dài) 头(tóu) 上(shàng)，
+七(qī) 月(yuè) 荷(hé) 花(huā) 别(bié) 样(yàng) 红(hóng)，
+八(bā) 月(yuè) 桂(guì) 花(huā) 甜(tián) 又(yòu) 香(xiāng)，
+九(jiǔ) 月(yuè) 菊(jú) 花(huā) 傲(ào) 秋(qiū) 风(fēng)，
+十(shí) 月(yuè) 芙(fú) 蓉(róng) 迎(yíng) 寒(hán)霜(shuāng)，
+十(shí) 一(yī) 月(yuè) 山(shān) 茶(chá) 初(chū) 开(kāi)放(fàng)，
+十(shí) 二(èr) 月(yuè) 腊(là) 梅(méi) 雪(xuě) 里(lǐ) 香(xiāng)。
+★古诗诵读             
+夏夜追凉
+宋·杨万里
+夜热依然午热同，开门小立月明中。
+竹深树密虫鸣处，时有微凉不是风。`
+            },
+            {
+                id: 'recitation30',
+                title: '诵读 三十',
+                content: `★朗朗上口
+晨(chén)读(dú)对(duì)韵(yùn)（十(shí)五(wǔ)）
+   秦(qín)对(duì)晋(jìn)，越(yuè)对(duì)吴(wú)，南(nán)海(hǎi)对(duì)西(xī)湖(hú)。
+鸢(yuān)飞(fēi)对(duì)鱼(yú)跃(yuè)，鹦(yīng)鹉(wǔ)对(duì)鹧(zhè)鸪(gū)。
+青(qīng)玉(yù)案(àn)，紫(zǐ)砂(shā)壶(hú)。李(lǐ)白(bái)对(duì)杨(yáng)朱(zhū)。
+儿(ér)童(tóng)骑(qí)马(mǎ)竹(zhú)，旅(lǚ)客(kè)忆(yì)莼(chún)鲈(lú)。
+   落(luò)叶(yè)舞(wǔ)风(fēng)高(gāo)复(fù)下(xià)，小(xiǎo)荷(hé)浮(fú)水(shuǐ)卷(juǎn)还(hái)舒(shū)。`
+            },
+            {
+                id: 'dizigui',
+                title: '《弟子规》',
+                content: `《弟子规》
+弟子规　圣人训　首孝悌　次谨信  泛爱众　而亲仁
+有余力　则学文  父母呼　应勿缓　父母命　行勿懒
+父母教　须敬听　父母责　须顺承  冬则温　夏则凊
+晨则省　昏则定  出必告　反必面　居有常　业无变
+事虽小　勿擅为　苟擅为　子道亏 物虽小　勿私藏
+苟私藏　亲心伤  亲所好　力为具　亲所恶　谨为去
+身有伤　贻亲忧　德有伤　贻亲羞  亲爱我　孝何难
+亲憎我　孝方贤  亲有过　谏使更　怡吾色　柔吾声
+谏不入　悦复谏　号泣随　挞无怨  亲有疾　药先尝
+昼夜侍　不离床   丧三年　常悲咽　居处变　酒肉绝
+丧尽礼　祭尽诚　事死者　如事生  兄道友　弟道恭
+兄弟睦　孝在中  财物轻　怨何生　言语忍　忿自泯
+或饮食　或坐走　长者先　幼者后  长呼人　即代叫
+人不在　己即到  称尊长　勿呼名　对尊长　勿见能
+路遇长　疾趋揖　长无言　退恭立 骑下马　乘下车
+过犹待　百步余  长者立　幼勿坐　长者坐　命乃坐
+尊长前　声要低　低不闻　却非宜 进必趋　退必迟
+问起对　视勿移  事诸父　如事父　事诸兄　如事兄
+朝起早　夜眠迟　老易至　惜此时 晨必盥　兼漱口
+便溺回　辄净手  冠必正　纽必结　袜与履　俱紧切
+置冠服　有定位　勿乱顿　致污秽  衣贵洁　不贵华
+上循分　下称家  对饮食　勿拣择　食适可　勿过则
+年方少　勿饮酒　饮酒醉　最为丑 步从容　立端正
+揖深圆　拜恭敬 勿践阈　勿跛倚　勿箕踞　勿摇髀
+缓揭帘　勿有声　宽转弯 勿触棱 执虚器　如执盈
+入虚室　如有人 事勿忙　忙多错　勿畏难　勿轻略
+斗闹场　绝勿近　邪僻事　绝勿问 将入门　问孰存
+将上堂　声必扬 人问谁　对以名　吾与我　不分明
+用人物　须明求　倘不问　即为偷 借人物　及时还
+后有急　借不难 凡出言　信为先　诈与妄　奚可焉
+话说多　不如少　惟其是　勿佞巧 奸巧语　秽污词
+市井气　切戒之 见未真　勿轻言　知未的　勿轻传
+事非宜　勿轻诺　苟轻诺　进退错 凡道字　重且舒
+勿急疾　勿模糊 彼说长　此说短　不关己　莫闲管
+见人善　即思齐　纵去远　以渐跻 见人恶　即内省
+有则改　无加警 唯德学　唯才艺　不如人　当自砺
+若衣服　若饮食　不如人　勿生戚 闻过怒　闻誉乐
+损友来　益友却 闻誉恐　闻过欣　直谅士　渐相亲
+无心非　名为错　有心非　名为恶 过能改　归于无
+倘掩饰　增一辜 凡是人　皆须爱　天同覆　地同载
+行高者　名自高　人所重　非貌高 才大者　望自大
+人所服　非言大 己有能　勿自私　人所能　勿轻訾
+勿谄富　勿骄贫　勿厌故　勿喜新  人不闲　勿事搅
+人不安　勿话扰 人有短　切莫揭　人有私　切莫说
+道人善　即是善　人知之　愈思勉 扬人恶　即是恶
+疾之甚　祸且作 善相劝　德皆建　过不规　道两亏
+凡取与　贵分晓　与宜多　取宜少 将加人　先问己
+己不欲　即速已 恩欲报　怨欲忘　报怨短　报恩长
+待婢仆　身贵端　虽贵端　慈而宽 势服人　心不然
+理服人　方无言 同是人　类不齐　流俗众　仁者希
+果仁者　人多畏　言不讳　色不媚 能亲仁　无限好
+德日进　过日少 不亲仁　无限害　小人进　百事坏
+不力行　但学文　长浮华　成何人 但力行　不学文
+任己见　昧理真 读书法　有三到　心眼口　信皆要
+方读此　勿慕彼　此未终　彼勿起 宽为限　紧用功
+工夫到　滞塞通 心有疑　随札记　就人问　求确义
+房室清　墙壁净　几案洁　笔砚正 墨磨偏　心不端
+字不敬　心先病  列典籍　有定处　读看毕　还原处
+虽有急　卷束齐　有缺坏　就补之非圣书　屏勿视
+蔽聪明　坏心志  勿自暴　勿自弃　圣与贤　可驯致`
+            }
+        ];
+
+        function generateTOC() {
+            let tocHTML = `<div class="toc-title">一年级诵读内容目录</div><div class="toc-list">`;
+            recitationData.slice(1).forEach(item => {
+                tocHTML += `<div class="toc-item" data-section="${item.id}">${item.title}</div>`;
+            });
+            tocHTML += `</div>`;
+            recitationData[0].content = tocHTML;
+        }
+
+        function generateNavList() {
+            const navList = document.getElementById('nav-list');
+            recitationData.forEach(item => {
+                if (item.id !== 'toc') {
+                    const li = document.createElement('li');
+                    li.className = 'nav-item';
+                    li.setAttribute('data-section', item.id);
+                    li.textContent = item.title;
+                    navList.appendChild(li);
+                }
+            });
+        }
+
+        function showContent(sectionId) {
+            const content = document.getElementById('content');
+            const section = recitationData.find(item => item.id === sectionId);
+            
+            if (section) {
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.toggle('active', item.dataset.section === sectionId);
+                });
+
+                if (sectionId === 'toc') {
+                    content.innerHTML = `<div class="section">${section.content}</div>`;
+                    setTimeout(() => {
+                        document.querySelectorAll('.toc-item').forEach(item => {
+                            item.addEventListener('click', () => showContent(item.dataset.section));
+                        });
+                    }, 0);
+                } else {
+                    content.innerHTML = `
+                        <div class="section">
+                            <div class="section-title">
+                                ${section.title}
+                                <div class="speech-controls">
+                                    <button class="play-button" 
+                                            data-section="${section.id}"
+                                            data-default-text="朗读">
+                                        <i>▶</i> 朗读
+                                    </button>
+                                    <div class="status-indicator"></div>
+                                </div>
+                            </div>
+                            <div class="section-content">${section.content}</div>
+                        </div>`;
+                    
+                    const playBtn = content.querySelector('.play-button');
+                    playBtn.addEventListener('click', () => {
+                        speech.togglePlay(section.content, section.id);
+                    });
+                }
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function initApp() {
+            generateTOC();
+            generateNavList();
+            showContent('toc');
+
+            document.getElementById('nav-list').addEventListener('click', function(e) {
+                if (e.target.classList.contains('nav-item')) {
+                    speech.stop();
+                    showContent(e.target.dataset.section);
+                    if (window.innerWidth <= 768) {
+                        document.querySelector('.sidebar').classList.remove('open');
+                        document.querySelector('.overlay').classList.remove('active');
+                    }
+                }
+            });
+
+            const toggleMenu = document.querySelector('.toggle-menu');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+
+            toggleMenu.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
+            });
+
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            });
+
+            window.addEventListener('blur', () => speech.pause());
+            window.addEventListener('beforeunload', () => speech.stop());
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
